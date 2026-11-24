@@ -1,0 +1,38 @@
+[package]
+name = "atlas-apfs"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT OR Apache-2.0"
+description = "Read APFS containers: checkpoints, object maps, volumes, snapshots, sealed volumes, extended attributes and decmpfs compression."
+repository = "https://github.com/05Narwhal/atlas-apfs"
+readme = "README.md"
+keywords = ["apfs", "filesystem", "macos", "apple", "parser"]
+categories = ["filesystem", "parser-implementations"]
+authors = ["Julian A. Loy"]
+
+[features]
+# Test container builders and byte-level fixtures, for crates that test against this one.
+test-util = ["atlas-hfsplus/test-util"]
+
+[dependencies]
+atlas-fs-core = { version = "0.1", path = "X:/Documents/Coding/Projects/Libraries/Rust/atlas-fs-core" }
+# decmpfs decoding, name decomposition and the Finder flag helpers APFS shares with HFS+.
+atlas-hfsplus = { version = "0.1", path = "X:/Documents/Coding/Projects/Libraries/Rust/atlas-hfsplus" }
+
+[dev-dependencies]
+# The compressed-file fixtures the tests build on.
+atlas-hfsplus = { version = "0.1", path = "X:/Documents/Coding/Projects/Libraries/Rust/atlas-hfsplus", features = ["test-util"] }
+
+[lints.rust]
+unsafe_code = "forbid"
+unused_must_use = "deny"
+rust_2018_idioms = { level = "warn", priority = -1 }
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+dbg_macro = "warn"
+todo = "warn"
+print_stdout = "warn"
+print_stderr = "warn"
+undocumented_unsafe_blocks = "deny"
