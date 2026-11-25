@@ -2,34 +2,57 @@
 
 [![crates.io](https://img.shields.io/crates/v/atlas-apfs.svg)](https://crates.io/crates/atlas-apfs) [![docs.rs](https://img.shields.io/docsrs/atlas-apfs)](https://docs.rs/atlas-apfs) [![CI](https://github.com/05Narwhal/atlas-apfs/actions/workflows/ci.yml/badge.svg)](https://github.com/05Narwhal/atlas-apfs/actions/workflows/ci.yml) ![License](https://img.shields.io/crates/l/atlas-apfs.svg)
 
-A read-only APFS reader. It implements `atlas_fs_core::fs::FileSystem`, so each volume of a container lists
-folders, looks up names, reads file content and extended attributes, and scans the whole file-system tree through
-the same trait as the other `atlas-*` readers.
+**A read-only APFS reader: containers, volumes, snapshots and sealed system volumes.**
 
-- Container superblock from the newest valid checkpoint, container and volume object maps, space manager.
-- Case-sensitive and case-insensitive volumes, sealed (system) volumes, sparse and cloned extents.
-- Snapshots, opened as read-only views.
-- decmpfs compressed files, through `atlas-hfsplus`.
-- Encrypted volumes are not read. A volume that cannot be read is reported as failed beside the others.
-- No `unsafe`. Every length, offset and count read from the disk is checked; damage is an error, not a panic.
+APFS is the filesystem of modern Macs, iPhones and iPads. `atlas-apfs` mounts an APFS container from any `BlockSource` and returns each volume in it. A ready volume implements `atlas_fs_core::fs::FileSystem`, so it is used like every other `atlas-*` reader.
+
+## Features
+
+- Container superblock from the **newest valid checkpoint**, container and volume **object maps**, and the space manager.
+- **Case-sensitive and case-insensitive** volumes, and **sealed** (system) volumes.
+- **Sparse and cloned extents**.
+- **Snapshots**, opened as read-only views.
+- **decmpfs compressed files**, through `atlas-hfsplus`.
+- A volume that cannot be read is reported as `VolumeState::Failed` beside the others, so one bad volume does not hide the rest.
+
+## Quick start
 
 ```rust,no_run
+use std::path::Path;
 use std::sync::Arc;
+
 use atlas_fs_core::fs::{FileSystem, VolumeState};
-use atlas_fs_core::io::block::BlockSource;
 use atlas_fs_core::io::file::FileSource;
 
-let source: Arc<dyn BlockSource> = Arc::new(FileSource::open("container.img".as_ref())?);
+let source = Arc::new(FileSource::open(Path::new("container.img"))?);
 for volume in atlas_apfs::mount(source)? {
     if let VolumeState::Ready(fs) = volume.state {
-        let mut dir = fs.read_dir(fs.root())?;
+        println!("{}: {}", volume.name, fs.info().name);
     }
 }
-# Ok::<(), atlas_fs_core::error::Error>(())
 ```
 
-The `test-util` feature exposes the test container builder; it is for tests of crates that use this one and is
-not part of the stable API.
+## How it works
+
+`mount` opens the container (newest valid checkpoint, container object map, a shared node cache) and mounts each volume in it as a `Volume`. A `Volume` answers the `FileSystem` calls: folders, content, extended attributes, snapshots and compressed files.
+
+## Limits
+
+Encrypted volumes are not read; they are reported as unreadable rather than guessed at.
+
+Builds on `atlas-hfsplus` for decmpfs decompression.
+
+## Safety and robustness
+
+- **No `unsafe`.** The crate is `#![forbid(unsafe_code)]`.
+- **On-disk bytes are hostile.** Every length, offset and count read from a disk is validated before use. Damage is returned as an error, never a panic, an unchecked index or an unbounded loop.
+- **Lints enforce it.** Clippy's `indexing_slicing`, `arithmetic_side_effects`, `unwrap_used`, `expect_used` and `panic` lints are on for the library code.
+- **Read-only.** Nothing in this crate writes to a disk or image.
+- **Fuzzed.** A `cargo-fuzz` target in `fuzz/` runs the parser on arbitrary bytes.
+
+## Feature flags
+
+- `test-util`: exposes the synthetic test image builders and fuzz seed inputs this crate's own tests use, for tests of crates built on it. It is not part of the stable API.
 
 ## Install
 
@@ -38,7 +61,9 @@ not part of the stable API.
 atlas-apfs = "26.0.1-a"
 ```
 
-Minimum supported Rust version: 1.88.
+Versions follow `26.MAJOR.MINOR-STAGE`: the year, the major and minor version, and a stage letter (`a` alpha, `b` beta, `s` stable). Cargo treats a stage suffix as a pre-release, so name the version exactly as above.
+
+Minimum supported Rust version: 1.88 (edition 2024).
 
 ## Licence
 
