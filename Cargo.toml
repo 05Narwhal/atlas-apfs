@@ -6,6 +6,7 @@ rust-version = "1.88"
 license = "MIT OR Apache-2.0"
 description = "Read APFS containers: checkpoints, object maps, volumes, snapshots, sealed volumes, extended attributes and decmpfs compression."
 repository = "https://github.com/05Narwhal/atlas-apfs"
+homepage = "https://julianloy.com"
 readme = "README.md"
 keywords = ["apfs", "filesystem", "macos", "apple", "parser"]
 categories = ["filesystem", "parser-implementations"]
