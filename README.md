@@ -1,6 +1,6 @@
 # atlas-apfs
 
-<!-- badges -->[![crates.io](https://img.shields.io/crates/v/atlas-apfs.svg)](https://crates.io/crates/atlas-apfs) [![docs.rs](https://img.shields.io/docsrs/atlas-apfs)](https://docs.rs/atlas-apfs) [![CI](https://github.com/05Narwhal/atlas-apfs/actions/workflows/ci.yml/badge.svg)](https://github.com/05Narwhal/atlas-apfs/actions/workflows/ci.yml) ![License](https://img.shields.io/crates/l/atlas-apfs.svg)
+[![crates.io](https://img.shields.io/crates/v/atlas-apfs.svg)](https://crates.io/crates/atlas-apfs) [![docs.rs](https://img.shields.io/docsrs/atlas-apfs)](https://docs.rs/atlas-apfs) [![CI](https://github.com/05Narwhal/atlas-apfs/actions/workflows/ci.yml/badge.svg)](https://github.com/05Narwhal/atlas-apfs/actions/workflows/ci.yml) ![License](https://img.shields.io/crates/l/atlas-apfs.svg)
 
 A read-only APFS reader. It implements `atlas_fs_core::fs::FileSystem`, so each volume of a container lists
 folders, looks up names, reads file content and extended attributes, and scans the whole file-system tree through
