@@ -1,12 +1,12 @@
 [package]
 name = "atlas-apfs"
-version = "26.0.1-a"
+version = "26.0.2-a"
 edition = "2024"
 rust-version = "1.88"
 license = "MIT OR Apache-2.0"
 description = "Read APFS containers: checkpoints, object maps, volumes, snapshots, sealed volumes, extended attributes and decmpfs compression."
 repository = "https://github.com/05Narwhal/atlas-apfs"
-homepage = "https://julianloy.com"
+documentation = "https://disk-atlas.julianloy.com/docs"
 readme = "README.md"
 keywords = ["apfs", "filesystem", "macos", "apple", "parser"]
 categories = ["filesystem", "parser-implementations"]
@@ -17,13 +17,13 @@ authors = ["Julian A. Loy"]
 test-util = ["atlas-hfsplus/test-util"]
 
 [dependencies]
-atlas-fs-core = { version = "26.0.1-a", path = "../atlas-fs-core" }
+atlas-fs-core = { version = "26.0.2-a", path = "../atlas-fs-core" }
 # decmpfs decoding, name decomposition and the Finder flag helpers APFS shares with HFS+.
-atlas-hfsplus = { version = "26.0.1-a", path = "../atlas-hfsplus" }
+atlas-hfsplus = { version = "26.0.2-a", path = "../atlas-hfsplus" }
 
 [dev-dependencies]
 # The compressed-file fixtures the tests build on.
-atlas-hfsplus = { version = "26.0.1-a", path = "../atlas-hfsplus", features = ["test-util"] }
+atlas-hfsplus = { version = "26.0.2-a", path = "../atlas-hfsplus", features = ["test-util"] }
 
 [lints.rust]
 unsafe_code = "forbid"
