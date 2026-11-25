@@ -35,7 +35,7 @@ not part of the stable API.
 
 ```toml
 [dependencies]
-atlas-apfs = "0.1"
+atlas-apfs = "26.0.1-a"
 ```
 
 Minimum supported Rust version: 1.88.
